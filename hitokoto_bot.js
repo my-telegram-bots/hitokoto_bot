@@ -27,14 +27,14 @@ async function handleRequest(request) {
     if(request.method == 'POST'){
         let data = await request.json()
         if(data.message !== undefined){
-            domessage(data.message)
+            handlemessage(data.message)
         }else if(data.inline_query !== undefined){
-            doinline(data.inline_query)
+            handleinline(data.inline_query)
         }
     }
     return new Response('ok', {status: 200})
 }
-async function domessage(d){
+async function handlemessage(d){
     let chat_id = d.chat.id
     let text = d.text || ''
     let otext = text.split(' ')
@@ -57,7 +57,7 @@ async function domessage(d){
         }
     }
 }
-async function doinline(d){
+async function handleinline(d){
     let inline_query_id = d.id
     let query = d.query
     let offset = d.offset.split('|')
