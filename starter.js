@@ -8,14 +8,14 @@ async function handleRequest(request) {
     if (request.method == 'POST') {
         let data = await request.json()
         if (data.message !== undefined) {
-            handlemessage(data.message)
+            handle_message(data.message)
         } else if (data.inline_query !== undefined) {
-            handleinline(data.inline_query)
+            handle_inline(data.inline_query)
         }
     }
     return new Response('ok', { status: 200 })
 }
-async function handlemessage(d) {
+async function handle_message(d) {
     let chat_id = d.chat.id
     let text = d.text || ''
     let otext = text.split(' ')
@@ -31,7 +31,7 @@ async function handlemessage(d) {
         }
     }
 }
-async function handleinline(d) {
+async function handle_inline(d) {
     let inline_query_id = d.id
     let query = d.query
     let offset = d.offset.split('|')
@@ -46,7 +46,7 @@ async function handleinline(d) {
         description: 'test inline message',
         type: 'article',
         input_message_content: {
-            message_text: 'Hello World!'
+            message_text: 'Hello World!' + query
         }
     })
     offset[1]++
@@ -59,9 +59,7 @@ async function handleinline(d) {
         next_offset: offset.join('|')
     })
 }
-function hitokoto() {
-    return hitokotos[Math.floor(Math.random() * hitokotos.length)]
-}
+
 async function tg(token, type, data, n = true) {
     try {
         let t = await fetch('https://api.telegram.org/bot' + token + '/' + type, {
